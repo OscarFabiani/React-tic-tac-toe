@@ -100,21 +100,14 @@ class GameBoard extends React.Component {
 class Space extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      visible: false,
-    }
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick() {
     this.props.updateTracker(this.props.id, this.props.turn);
     this.props.toggleTurn();
-    this.setState({
-      visible: true,
-    })
   }
   shouldComponentUpdate(nextProps, nextState) {
-    console.log('letter='+this.props.letter, 'winner='+this.props.winner);
-    if((this.props.letter !== '') || this.props.winner !== '') {
+    if((this.props.letter !== '' && nextProps.letter !== '') || (this.props.winner !== '' && nextProps.winner !== '')) {
       return false;
     }
     else {
@@ -156,6 +149,7 @@ ReactDOM.render(<GameBoard/>, document.getElementById('root'));
 //Winning combinations: abc, def, ghi, abg, beh, cfi, aei.
 
 
+//Space components before implementing map
 /*
   <Space id={'a'} turn={this.state.turn} winner={this.state.winner} updateTracker={this.updateTracker} toggleTurn={this.toggleTurn} checkForWin={this.checkForWin}/>
   <Space id={'b'} turn={this.state.turn} winner={this.state.winner} updateTracker={this.updateTracker} toggleTurn={this.toggleTurn} checkForWin={this.checkForWin}/>
@@ -167,5 +161,6 @@ ReactDOM.render(<GameBoard/>, document.getElementById('root'));
   <Space id={'h'} turn={this.state.turn} winner={this.state.winner} updateTracker={this.updateTracker} toggleTurn={this.toggleTurn} checkForWin={this.checkForWin}/>
   <Space id={'i'} turn={this.state.turn} winner={this.state.winner} updateTracker={this.updateTracker} toggleTurn={this.toggleTurn} checkForWin={this.checkForWin}/>
 */
+
 
 //CONTINUE PROJECT LOGIC
