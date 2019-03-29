@@ -4,60 +4,46 @@ import './index.css';
 
 
 class GameBoard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      turn: 'x',
-      winner: '',
-      a: '',
-      b: '',
-      c: '',
-      d: '',
-      e: '',
-      f: '',
-      g: '',
-      h: '',
-      i: '',
-    }
-    this.toggleTurn = this.toggleTurn.bind(this);
-    this.checkForWin = this.checkForWin.bind(this);
-    this.updateTracker = this.updateTracker.bind(this);
-    this.reset = this.reset.bind(this);
+  state = {
+    turn: 'x',
+    winner: '',
+    a: '',
+    b: '',
+    c: '',
+    d: '',
+    e: '',
+    f: '',
+    g: '',
+    h: '',
+    i: '',
   }
-  toggleTurn() {
-    if(this.state.turn === 'x') {
-      this.setState({
-        turn: 'o',
-      })
-    }
-    else {
-      this.setState({
-        turn: 'x',
-      })
-    }
+  toggleTurn = () => {
+    this.state.turn === 'x'
+      ? this.setState({
+          turn: 'o',
+        })
+      : this.setState({
+          turn: 'x',
+        })
   }
-  checkForWin() {
+  checkForWin = () => {
     let[a, b, c, d, e, f, g, h, i] = [
-      this.state.a, this.state.b, this.state.c, this.state.d, this.state.e, this.state.f, this.state.g, this.state.h, this.state.i
+      this.state.a, this.state.b, this.state.c, this.state.d, this.state.e,
+      this.state.f, this.state.g, this.state.h, this.state.i
     ];
-    if(
-      (a !== '' && ((a === b && a === c) || (a === d && a === g) || (a === e && a === i)))
-        || (c !== '' && ((c === f && c === i) || (c === e && c === g)))
-          || (d !== '' && (d === e && d === f))
-            || (g !== '' && (g === h && g === i))
-              || (b !== '' && (b === e && b === h))) {
+    let winningCombos = [[a, b, c], [a, d, g], [a, e, i], [c, f, i], [c, e, g], [d, e, f], [g, h, i], [b, e, h]];
+    if (winningCombos.some(array => array.every(value => (value === array[0] && value !== '')))) {
       this.setState({
         winner: this.state.turn === 'x' ? 'O' : 'X',
       })
     }
   }
-  updateTracker(id, turn) {
+  updateTracker = (id, turn) => {
     this.setState({
       [id]: turn,
-      didReset: false,
     })
   }
-  reset() {
+  reset = () => {
     this.setState({
       turn: 'x',
       winner: '',
@@ -84,7 +70,7 @@ class GameBoard extends React.Component {
         toggleTurn={this.toggleTurn}
         checkForWin={this.checkForWin}/>);
     return (
-      <div>
+      <div className='wrapper'>
         <div className='game-board'>
         {spaces}
         </div>
@@ -98,15 +84,12 @@ class GameBoard extends React.Component {
 }
 
 class Space extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
+  handleClick = () => {
     this.props.updateTracker(this.props.id, this.props.turn);
     this.props.toggleTurn();
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
+    //This also checks if the game has been reset by using nextProps
     if((this.props.letter !== '' && nextProps.letter !== '') || (this.props.winner !== '' && nextProps.winner !== '')) {
       return false;
     }
@@ -132,8 +115,7 @@ class Space extends React.Component {
 const Display = (props) => {
   return (
     <div>
-      <h2>{props.winner ? 'Winner:' : 'Next Player:'}</h2>
-      <p>{props.winner ? props.winner : props.turn === 'x' ? 'X' : 'O'}</p>
+      <h2>{props.winner ? 'Winner:' : 'Next Player:'}{props.winner ? props.winner : props.turn === 'x' ? 'X' : 'O'}</h2>
       <button onClick={props.reset}>Reset</button>
     </div>
   )
@@ -162,5 +144,28 @@ ReactDOM.render(<GameBoard/>, document.getElementById('root'));
   <Space id={'i'} turn={this.state.turn} winner={this.state.winner} updateTracker={this.updateTracker} toggleTurn={this.toggleTurn} checkForWin={this.checkForWin}/>
 */
 
+//This is the original logic for winning the game before introducing an equals function.
+/*
+if(
+  (a !== '' && ((a === b && a === c) || (a === d && a === g) || (a === e && a === i)))
+    || (c !== '' && ((c === f && c === i) || (c === e && c === g)))
+      || (d !== '' && (d === e && d === f))
+        || (g !== '' && (g === h && g === i))
+          || (b !== '' && (b === e && b === h))) {
+            this.setState({
+              winner: this.state.turn === 'x' ? 'O' : 'X',
+            })
+          }
 
-//CONTINUE PROJECT LOGIC
+if (areEqual(a, b, c) || areEqual(a, d, g) || areEqual(a, e, i)
+        || areEqual(c, f, i) || areEqual(c, e, g) || areEqual(d, e, f)
+        || areEqual(g, h, i) || areEqual(b, e, h)) {
+      this.setState({
+        winner: this.state.turn === 'x' ? 'O' : 'X',
+      })
+    }
+const areEqual = (...args) => args.every(v => (v === args[0] && v !== ''));
+if (wins.some(v => areEqual(...v))) {
+*/
+
+//REFINE PROJECT LOGIC/COMPOSITION BEFORE COMPARING WITH TUTORIAL

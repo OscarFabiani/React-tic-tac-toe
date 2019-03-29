@@ -1,3 +1,14 @@
+html {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 15px;
+}
+body, h2, p {
+  margin: 0;
+  padding: 0;
+}
+.wrapper {
+  display:flex;
+}
 .game-board {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -8,8 +19,12 @@
 }
 
 .space {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
   border: 1px solid black;
   background-color: aqua;
+  font-size: 3em;
 }
