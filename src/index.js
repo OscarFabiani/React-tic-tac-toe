@@ -7,15 +7,7 @@ class GameBoard extends React.Component {
   state = {
     turn: 'x',
     winner: '',
-    a: '',
-    b: '',
-    c: '',
-    d: '',
-    e: '',
-    f: '',
-    g: '',
-    h: '',
-    i: '',
+    a: '', b: '', c: '', d: '', e: '', f: '', g: '', h: '', i: '',
   }
   toggleTurn = () => {
     this.state.turn === 'x'
@@ -38,24 +30,16 @@ class GameBoard extends React.Component {
       })
     }
   }
-  updateTracker = (id, turn) => {
+  updateTracker = (id) => {
     this.setState({
-      [id]: turn,
+      [id]: this.state.turn,
     })
   }
   reset = () => {
     this.setState({
       turn: 'x',
       winner: '',
-      a: '',
-      b: '',
-      c: '',
-      d: '',
-      e: '',
-      f: '',
-      g: '',
-      h: '',
-      i: '',
+      a: '', b: '', c: '', d: '', e: '', f: '', g: '', h: '', i: '',
     })
   }
   render() {
@@ -85,7 +69,7 @@ class GameBoard extends React.Component {
 
 class Space extends React.Component {
   handleClick = () => {
-    this.props.updateTracker(this.props.id, this.props.turn);
+    this.props.updateTracker(this.props.id);
     this.props.toggleTurn();
   }
   shouldComponentUpdate(nextProps) {
@@ -97,10 +81,8 @@ class Space extends React.Component {
       return true;
     }
   }
-  componentDidUpdate() {
-    this.props.checkForWin();
-  }
   render() {
+    this.props.checkForWin();
     if(this.props.letter !== '') {
       return (
         <div className='space'>{this.props.turn === 'x' ? 'O' : 'X'}</div>
@@ -116,7 +98,7 @@ const Display = (props) => {
   return (
     <div>
       <h2>{props.winner ? 'Winner:' : 'Next Player:'}{props.winner ? props.winner : props.turn === 'x' ? 'X' : 'O'}</h2>
-      <button onClick={props.reset}>Reset</button>
+      <button onClick={props.reset}>Reset Game</button>
     </div>
   )
 }
@@ -168,4 +150,4 @@ const areEqual = (...args) => args.every(v => (v === args[0] && v !== ''));
 if (wins.some(v => areEqual(...v))) {
 */
 
-//REFINE PROJECT LOGIC/COMPOSITION BEFORE COMPARING WITH TUTORIAL
+//COMPARE WITH TUTORIAL
