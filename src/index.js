@@ -29,10 +29,13 @@ class Board extends React.Component {
     })
   }
   renderSquare(i) {
-    return <Square
-             value={this.state.squares[i]}
-             onClick={() => this.handleClick(i)}
-           />;
+    return (
+      <Square
+        key={i}
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    )
   }
 
   render() {
@@ -63,18 +66,27 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-//Try to refactor(possibly with reduce)
+//Try to refactor
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6],
   ];
-  for (let i = 0; i < lines.length; i++) {
+  let winner = null;
+  lines.forEach(line => squares[line[0]] && (line.every(v => squares[line[0]] === squares[v])) ? winner = squares[line[0]]: null);
+  return winner;
+}
+
+//example calculateWinner logic(currently better than my best)
+/*
+for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
   return null;
-}
+*/
+
+
 
 //CONTINUE TO REFACTOR AND COMPARE
