@@ -21,38 +21,50 @@ const Square = ({position, value, onClick}) => {
   );
 }
 
-const Board = ({squares, onClick}) => {
-  const squareRenders = Array(9).fill(null).map((_, i) =>
-    <Square
-      key={i}
-      position={i}
-      value={squares[i]}
-      onClick={onClick}
-    />
-  );
-  return (
-    <div>
-      <div className='game-board'>
-        {squareRenders}
-      </div>
-    </div>
-  );
-}
+class Board extends React.Component {
+  state = {
+    squares: [null, null, null, null, null, null, null, null, null], //Array(9).fill(null),
+    xIsNext: true,
+  };
 
-const JumpButton = ({move, jumpTo}) => {
-  const desc = move ? 'Go to move #' + move : 'Go to game start';
-  const handleClick = () => {
-    jumpTo(move);
+  handleClick = (i) => {
+    const squares = this.state.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    })
   }
-  return (
-    <button key={move} onClick={handleClick}>{desc}</button>
-  )
+
+  render() {
+    const winner = calculateWinner(this.state.squares);
+    const squareRenders = Array(9).fill(null).map((_, i) =>
+      <Square
+        key={i}
+        position={i}
+        value={this.state.squares[i]}
+        onClick={this.handleClick}
+      />
+    );
+    return (
+      <div>
+        <h3>{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
+        <div className='game-board'>
+          {squareRenders}
+        </div>
+      </div>
+    );
+  }
 }
 
+//I ADDED A BUNCH OF CODE TO THIS COMPONENT BEFORE STOPPING
 class Game extends React.Component {
   state = {
     history: [{
-      squares: [null, null, null, null, null, null, null, null, null], //Array(9).fill(null),
+      squares: Array(9).fill(null),
     }],
     stepNumber: 0,
     xIsNext: true,
@@ -73,7 +85,7 @@ class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
     });
   }
-  jumpTo = (step) => {
+  jumpTo(step) {
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
@@ -84,24 +96,28 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((_, move) => {
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Go to move #' + move :
+        'Go to game start';
       return (
         <li key={move}>
-          <JumpButton move={move} jumpTo={this.jumpTo}/>
+          <button key={move} onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     });
 
     return (
+      //I COULD REMOVE THE WRAPPER DIV AND OL AND BE BACK TO FUNCTIONAL
       <div>
-        <h3>{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
+        <h3>{winner ? 'Winnerr: ' + winner : 'Next playerr: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
         <Board
           squares={current.squares}
           onClick={(i) => this.handleClick(i)}
         />
-        <ul>
+        <ol>
           {moves}
-        </ul>
+        </ol>
       </div>
     );
   }
