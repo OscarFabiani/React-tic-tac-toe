@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-const Square = ({position, value, onClick}) => {
+const Square = ({position, value, handleClick}) => {
   //This seems to be a bad practice though it also seems to allow me to forgo the use of
   //binding in the Board component's render. The reason this is bad practice is because
   //this component will recreate the handler on every re-render. Maybe I can use useCallback 
@@ -11,23 +11,33 @@ const Square = ({position, value, onClick}) => {
   //has changed. This is useful when passing callbacks to optimized child components that rely
   //on reference equality to prevent unnecessary renders.” This 'hook' seems to be included
   //in create-react-app of of now(03/30/19), but doesn't seem to be working.
-  const handleClick = () => {
-    onClick(position);
+  const onClick = () => {
+    handleClick(position);
   }
   return (
-    <button className="square" onClick={handleClick}>
+    <button className="square" onClick={onClick}>
       {value}
     </button>
   );
 }
 
-const Board = ({squares, onClick}) => {
+const JumpButton = ({step, jumpTo}) => {
+  const desc = step ? 'Go to move #' + step : 'Go to game start';
+  const handleClick = () => {
+    jumpTo(step);
+  }
+  return (
+    <button key={step} onClick={handleClick}>{desc}</button>
+  )
+}
+
+const Board = ({squares, handleClick}) => {
   const squareRenders = Array(9).fill(null).map((_, i) =>
     <Square
       key={i}
       position={i}
       value={squares[i]}
-      onClick={onClick}
+      handleClick={handleClick}
     />
   );
   return (
@@ -39,16 +49,6 @@ const Board = ({squares, onClick}) => {
   );
 }
 
-const JumpButton = ({move, jumpTo}) => {
-  const desc = move ? 'Go to move #' + move : 'Go to game start';
-  const handleClick = () => {
-    jumpTo(move);
-  }
-  return (
-    <button key={move} onClick={handleClick}>{desc}</button>
-  )
-}
-
 class Game extends React.Component {
   state = {
     history: [{
@@ -57,13 +57,15 @@ class Game extends React.Component {
     stepNumber: 0,
     xIsNext: true,
   };
-  handleClick(i) {
+
+  handleClick = (i) => {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
+
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       history: history.concat([{
@@ -73,21 +75,23 @@ class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
     });
   }
+
   jumpTo = (step) => {
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
   }
+  
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((_, move) => {
+    const jumpButtonRenders = history.map((_, i) => {
       return (
-        <li key={move}>
-          <JumpButton move={move} jumpTo={this.jumpTo}/>
+        <li key={i}>
+          <JumpButton step={i} jumpTo={this.jumpTo}/>
         </li>
       );
     });
@@ -97,10 +101,10 @@ class Game extends React.Component {
         <h3>{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
         <Board
           squares={current.squares}
-          onClick={(i) => this.handleClick(i)}
+          handleClick={this.handleClick}
         />
         <ul>
-          {moves}
+          {jumpButtonRenders}
         </ul>
       </div>
     );
