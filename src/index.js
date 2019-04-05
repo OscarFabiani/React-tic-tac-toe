@@ -21,45 +21,46 @@ const Square = ({position, value, handleClick}) => {
   );
 }
 
-const JumpButton = ({step, jumpTo}) => {
-  const desc = step ? 'Go to move #' + step : 'Go to game start';
+const JumpButton = ({move, jumpTo}) => {
+  const desc = move ? 'Go to move #' + move : 'Go to game start';
   const handleClick = () => {
-    jumpTo(step);
+    jumpTo(move);
   }
   return (
-    <button key={step} onClick={handleClick}>{desc}</button>
+    <li>
+      <button onClick={handleClick}>{desc}</button>
+    </li>
   )
 }
 
 const Board = ({squares, handleClick}) => {
+  let squareRendersKey = 0;
   const squareRenders = Array(9).fill(null).map((_, i) =>
     <Square
-      key={i}
+      key={squareRendersKey++}
       position={i}
       value={squares[i]}
       handleClick={handleClick}
     />
   );
   return (
-    <div>
       <div className='game-board'>
         {squareRenders}
       </div>
-    </div>
   );
 }
 
 class Game extends React.Component {
   state = {
     history: [{
-      squares: [null, null, null, null, null, null, null, null, null], //Array(9).fill(null),
+      squares: Array(9).fill(null),
     }],
-    stepNumber: 0,
+    move: 0,
     xIsNext: true,
   };
 
   handleClick = (i) => {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const history = this.state.history.slice(0, this.state.move + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
@@ -71,28 +72,32 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
-      stepNumber: history.length,
+      move: history.length,
       xIsNext: !this.state.xIsNext,
     });
   }
 
-  jumpTo = (step) => {
+  jumpTo = (move) => {
     this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
+      //This would update the jump buttons by updating the history to forget the steps following the jumped-to step.
+      //history: this.state.history.slice(0, step + 1),
+      move: move,
+      xIsNext: (move % 2) === 0,
     });
   }
-  
+
   render() {
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const current = history[this.state.move];
     const winner = calculateWinner(current.squares);
 
+    let jumpButtonRendersKey = 0;
     const jumpButtonRenders = history.map((_, i) => {
       return (
-        <li key={i}>
-          <JumpButton step={i} jumpTo={this.jumpTo}/>
-        </li>
+          <JumpButton
+            key={jumpButtonRendersKey++}
+            move={i}
+            jumpTo={this.jumpTo}/>
       );
     });
 
