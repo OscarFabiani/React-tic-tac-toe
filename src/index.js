@@ -1,54 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 
 
-const Square = ({position, value, handleClick}) => {
-  //This seems to be a bad practice though it also seems to allow me to forgo the use of
-  //binding in the Board component's render. The reason this is bad practice is because
-  //this component will recreate the handler on every re-render. Maybe I can use useCallback 
-  //which “returns a memoized version of the callback that only changes if one of the inputs
-  //has changed. This is useful when passing callbacks to optimized child components that rely
-  //on reference equality to prevent unnecessary renders.” This 'hook' seems to be included
-  //in create-react-app of of now(03/30/19), but doesn't seem to be working.
-  const onClick = () => {
-    handleClick(position);
-  }
-  return (
-    <button className="square" onClick={onClick}>
-      {value}
-    </button>
-  );
-}
-
-const JumpButton = ({move, jumpTo}) => {
-  const desc = move ? 'Go to move #' + move : 'Go to game start';
-  const handleClick = () => {
-    jumpTo(move);
-  }
-  return (
-    <li>
-      <button onClick={handleClick}>{desc}</button>
-    </li>
-  )
-}
-
-const Board = ({squares, handleClick}) => {
-  let squareRendersKey = 0;
-  const squareRenders = Array(9).fill(null).map((_, i) =>
-    <Square
-      key={squareRendersKey++}
-      position={i}
-      value={squares[i]}
-      handleClick={handleClick}
-    />
-  );
-  return (
-      <div className='game-board'>
-        {squareRenders}
-      </div>
-  );
-}
 
 class Game extends React.Component {
   state = {
@@ -102,19 +56,70 @@ class Game extends React.Component {
     });
 
     return (
-      <div>
-        <h3>{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
+      <div className="game">
+        <h1 className="main-title">React Tic Tac Toe</h1>
         <Board
           squares={current.squares}
           handleClick={this.handleClick}
         />
-        <ul>
+        <h3 className="next-player">{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
+        <ul className="history-list">
           {jumpButtonRenders}
         </ul>
       </div>
     );
   }
 }
+
+const Board = ({squares, handleClick}) => {
+  let squareRendersKey = 0;
+  const squareRenders = Array(9).fill(null).map((_, i) =>
+    <Square
+      key={squareRendersKey++}
+      position={i}
+      value={squares[i]}
+      handleClick={handleClick}
+    />
+  );
+  return (
+      <div className='game-board'>
+        {squareRenders}
+      </div>
+  );
+}
+
+
+const Square = ({position, value, handleClick}) => {
+  //This (creating a function in a functional/stateless component)seems to be a bad practice
+  //though it also seems to allow me to forgo the use of binding in the Board component's render.
+  //The reason this is bad practice is because this component will recreate the handler on every
+  //re-render. Maybe I can use useCallback which “returns a memoized version of the callback that
+  //only changes if one of the inputs has changed. This is useful when passing callbacks to
+  //optimized child components that rely on reference equality to prevent unnecessary renders.”
+  //This 'hook' seems to be included in create-react-app of of now(03/30/19), but doesn't seem to
+  //be working.
+  const onClick = () => {
+    handleClick(position);
+  }
+  return (
+    <button className="square" onClick={onClick}>
+      {value}
+    </button>
+  );
+}
+
+const JumpButton = ({move, jumpTo}) => {
+  const desc = move ? 'Go to Move #' + move : 'Go to Game Start';
+  const handleClick = () => {
+    jumpTo(move);
+  }
+  return (
+    <li className="history-item">
+      <button className="jump-button" onClick={handleClick}>{desc}</button>
+    </li>
+  )
+}
+
 
 
 ReactDOM.render(
