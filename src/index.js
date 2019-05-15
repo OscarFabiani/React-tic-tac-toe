@@ -58,14 +58,18 @@ class Game extends React.Component {
     return (
       <div className="game">
         <h1 className="main-title">React Tic Tac Toe</h1>
-        <Board
-          squares={current.squares}
-          handleClick={this.handleClick}
-        />
-        <h3 className="next-player">{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
-        <ul className="history-list">
-          {jumpButtonRenders}
-        </ul>
+        <div className="orientation-wrapper">
+          <div className="board-and-score">
+            <Board
+              squares={current.squares}
+              handleClick={this.handleClick}
+            />
+            <h3 className="next-player">{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
+          </div>
+          <ul className="history-list">
+            {jumpButtonRenders}
+          </ul>
+        </div>
       </div>
     );
   }

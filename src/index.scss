@@ -1,10 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Margarine");
 
+
+//Variables:
+
 $color1: #d83f87;
 $color2: #2a1b3d;
 $color3: #44218d;
 $color4: #e98074;
 $color5: #a4b3b6;
+
+//Element Styling:
 
 html {
   font-family: "Margarine", cursive;
@@ -19,6 +24,7 @@ ul {
 button {
   border: none;
   background-color: unset;
+  font-size: unset;
   font-family: "Margarine";
   cursor: pointer;
   &:focus {
@@ -30,6 +36,7 @@ body, h1, h2, h3, p, button, ul {
   padding: 0;
 }
 
+//Main Styling:
 
 .game {
   display: flex;
@@ -37,55 +44,67 @@ body, h1, h2, h3, p, button, ul {
   align-items: center;
   padding-top: 2em;
   width: 100&;
+  font-size: 1.2em;
   h1.main-title {
     margin-bottom: 1em;
     color: $color4;
   }
-  .game-board {
-    display: grid;
-    grid-template: repeat(3, 4em) / repeat(3, 4em);
-    grid-gap: .2em;
-    margin-bottom: .5em;
-    border: .2em solid $color1;
-    border-radius: .2em;
-    box-shadow: 0 0 1em $color1;
-    background-color: $color1;
-    .square {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      box-shadow: 0 0 .2em inset $color1;
-      color: $color4;
-      background: $color2;
-      font-size: 3em;
-      &:hover {
-        background-color: $color3;
-      }
-    }    
-  }
-  h3.next-player {
-    margin-bottom: 1em;
-    color: $color4;
-  }
-  ul.history-list {
+  .orientation-wrapper {
     display: flex;
+    align-items: center;
     justify-content: space-around;
-    flex-wrap: wrap;
-    width: 22em;
-    margin-bottom: 2em;
-    li.history-item {
-      margin: .5em 0;
-      button.jump-button {
-        border: .2em solid $color4;
-        border-radius: .5em;
-        box-shadow: 0 0 .5em inset $color4,  0 0 .5em  $color4;
-        padding: .5em 0;
-        width: 10em;
-        color: $color1;
-        background-color: $color2;
-        &:hover {
-          background-color: $color3;
+    width: 35em;
+    .board-and-score {
+      text-align: center;
+      .game-board {
+        display: grid;
+        grid-template: repeat(3, 4em) / repeat(3, 4em);
+        grid-gap: .2em;
+        margin-bottom: .5em;
+        border: .2em solid $color1;
+        border-radius: .2em;
+        box-shadow: 0 0 1em $color1;
+        background-color: $color1;
+        .square {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          box-shadow: 0 0 .2em inset $color1;
+          color: $color4;
+          background: $color2;
+          font-size: 3em;
+          &:hover {
+            background-color: $color3;
+          }
+        }    
+      }
+      h3.next-player {
+        margin-bottom: 1em;
+        color: $color4;
+      }
+    }
+    ul.history-list {
+      align-self: flex-start;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      width: 16em;
+      margin-bottom: 2em;
+      li.history-item {
+        margin: .5em 0;
+        font-size: .7em;
+        button.jump-button {
+          border: .2em solid $color4;
+          border-radius: .5em;
+          box-shadow: 0 0 .5em inset $color4,  0 0 .5em  $color4;
+          padding: .5em 0;
+          width: 10em;
+          color: $color1;
+          background-color: $color2;
+          &:hover {
+            background-color: $color3;
+          }
         }
       }
     }
@@ -94,33 +113,51 @@ body, h1, h2, h3, p, button, ul {
 
 
 //Media Queries:
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .game {
+    font-size: 1em;
+    .orientation-wrapper {
+      ul.history-list {
+        align-self: flex-start;
+        width: 16em;
+        li.history-item {
+          font-size: .7em;
+        }
+      }
+    }
+  }
+}
 @media (min-width: 481px) and (max-width: 767px) {
+  .game {
+    font-size: 1em;
+    .orientation-wrapper {
+      flex-direction: column;
+      width: 100%;
+      ul.history-list {
+        align-self: center;
+        width: 22em;
+        li.history-item {
+          font-size: 1em;
+        }
+      }
+    }
+  }
 }
 @media (min-width: 320px) and (max-width: 480px) {
   .game {
     font-size: .7em;
+    .orientation-wrapper {
+      flex-direction: column;
+      width: 100%;
+      ul.history-list {
+        align-self: center;
+        width: 22em;
+        li.history-item {
+          font-size: 1em;
+        }
+      }
+    }
   }
 }
 
-
-
-/*ADD SCSS AND REFACTOR*/
-/*STYLE*/
-
-/*
-<div className="game">
-        <h1 className="main-title">React Tic Tac Toe</h1>
-        <div className="orientation-wrapper">
-          <div className="board-and-score">
-            <Board
-              squares={current.squares}
-              handleClick={this.handleClick}
-            />
-            <h3 className="next-player">{winner ? 'Winner: ' + winner : 'Next player: ' + (this.state.xIsNext ? 'X' : 'O')}</h3>
-          </div>
-          <ul className="history-list">
-            {jumpButtonRenders}
-          </ul>
-        </div>
-      </div>
-*/
