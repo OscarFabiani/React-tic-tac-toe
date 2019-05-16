@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://oscarfabiani.github.io/React-tic-tac-toe/",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "gh-pages": "^2.0.1",
     "node-sass": "^4.12.0",
     "react": "^16.8.5",

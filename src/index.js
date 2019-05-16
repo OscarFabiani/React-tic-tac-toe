@@ -1,3 +1,4 @@
+import "../node_modules/babel-polyfill/"
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
@@ -105,8 +106,9 @@ const Square = ({position, value, handleClick}) => {
   const onClick = () => {
     handleClick(position);
   }
+  let className = "square square" + (position + 1);
   return (
-    <button className="square" onClick={onClick}>
+    <button className={className} onClick={onClick}>
       {value}
     </button>
   );
