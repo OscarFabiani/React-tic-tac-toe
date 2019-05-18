@@ -12,4 +12,4 @@ A tic-tac-toe game built with React which allows movement through a tracked move
 
 <a href="https://oscarfabiani.com/React-tic-tac-toe/" target="_blank">View Live Demo</a>
 
-<a href="https://oscarfabiani.com/React-tic-tac-toe/" target="_blank"><img src="https://oscarfabiani.com/assets/React-tic-tac-toe-screenshot.png" title="React-tic-tac-toe" alt="React-tic-tac-toe"></a>
+<a href="https://oscarfabiani.com/React-tic-tac-toe/" target="_blank"><img src="https://oscarfabiani.com/assets/tic-tac-toe-screenshot.png" title="React-tic-tac-toe" alt="React-tic-tac-toe"></a>
